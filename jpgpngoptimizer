@@ -1,0 +1,60 @@
+#!/bin/bash
+
+FILE="$1"
+TMPDIR="/tmp"
+TMPFILE="fake"
+
+if [ $# -eq 0 ]
+  then
+    echo "No arguments"
+    echo "Usage: $0 filename"
+    exit 1
+fi
+
+if [[ -e "$FILE"  && ${FILE: -4} != ".tmp" ]]
+    then
+        TYPE=$(file -b --mime-type "$FILE")
+        if [[ $TYPE == "image/jpeg" || $TYPE == "image/png" ]]
+            then
+                FILENAME=$(basename "$FILE")
+                TMPFILE="${TMPDIR}/${FILENAME}.tmp"
+                echo "Copying $FILE to $TMPFILE"
+                cp -f "$FILE" "$TMPFILE"
+        fi
+    else
+        echo "Skip this file: $FILE"
+        exit 1
+fi
+
+case $TYPE in
+    "image/jpeg")
+        echo "New jpeg file: $FILE"
+        echo "Start processing"
+        jpegoptim -f --strip-all "$TMPFILE" && \
+            echo "Success optimize" && \
+            mv -f "$TMPFILE" "${FILE}".tmp && \
+            mv -f "${FILE}".tmp "$FILE" && \
+            echo "File renamed back from $TMPFILE to $FILE"
+        ;;
+    "image/png")
+        echo "New png file: $FILE"
+        optipng -force -o7 "$TMPFILE" && \
+        advpng -z4 "$TMPFILE" && \
+        pngcrush -rem gAMA -rem alla -rem cHRM -rem iCCP \
+                 -rem sRGB -rem time "$TMPFILE" "${TMPFILE}".tmp && \
+                 mv -f "${TMPFILE}".tmp "${FILE}".tmp && \
+                 mv -f "${FILE}".tmp "$FILE" && \
+                 echo "Renamed back from ${TMPFILE}.tmp to $FILE"
+        ;;
+    *)
+        rm -f "$TMPFILE"
+        exit 1
+        ;;  
+esac
+
+if [ -e "$TMPFILE" ]
+    then
+        rm -f "$TMPFILE" && echo "Temporary file $TMPFILE deleted"
+fi
+
+exit 0

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+SEARCHDIR="$1"
+OPTIMIZER_SCRIPT="/home/incred/dev/jpgpngoptimizer"
+
+if [ $# -eq 0 ]
+    then
+        echo "No arguments"
+        echo "Usage: $0 directory"
+        exit 1
+fi
+
+find $SEARCHDIR -type f -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" | while read FILE
+    do    
+        if ! attr -g optimized "$FILE" > /dev/null 2>&1
+            then
+                $OPTIMIZER_SCRIPT "$FILE" && \
+                    echo "Seting attribute to: $FILE" && \
+                    attr -s optimized -V yes "$FILE"
+        fi
+    done
+
+

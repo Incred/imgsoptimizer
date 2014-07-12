@@ -1,0 +1,16 @@
+#!/bin/bash
+trap 'echo "Killing process"; kill 0' EXIT
+
+DIR="$1"
+LOG="/tmp/inotify_test/log"
+# Path to scripts
+OPTIMIZER_SCRIPT="/home/incred/dev/jpgpngoptimizer"
+FINDNOPTIMIZE_SCRIPT="/home/incred/dev/findimgswithoutattr"
+
+echo "Starting process"
+$FINDNOPTIMIZE_SCRIPT $1 &
+
+inotifywait -r -m -q -e create --format %w%f $DIR | while read FILE
+do
+    $OPTIMIZER_SCRIPT "$FILE" && attr -s optimized -V yes "$FILE"
+done
