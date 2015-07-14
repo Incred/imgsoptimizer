@@ -34,6 +34,7 @@ case $TYPE in
             echo "Success optimize" && \
             mv -f "$TMPFILE" "${FILE}".tmp && \
             mv -f "${FILE}".tmp "$FILE" && \
+            chmod 0644 "$FILE" && \
             echo "File renamed back from $TMPFILE to $FILE"
         ;;
     "image/png")
@@ -44,6 +45,7 @@ case $TYPE in
                  -rem sRGB -rem time "$TMPFILE" "${TMPFILE}".tmp && \
                  mv -f "${TMPFILE}".tmp "${FILE}".tmp && \
                  mv -f "${FILE}".tmp "$FILE" && \
+                 chmod 0644 "$FILE" && \
                  echo "Renamed back from ${TMPFILE}.tmp to $FILE"
         ;;
     *)
