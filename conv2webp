@@ -6,7 +6,7 @@ TMPDIR="/tmp"
 if [[ -e "$FILE"  && ${FILE: -4} != ".tmp" ]]
     then
         TYPE=$(file -b --mime-type "$FILE")
-        if [[ $TYPE != "image/webp" && $TYPE != "inode/x-empty" ]]
+        if [[ ${TYPE: 0:5} == "image" && $TYPE != "image/webp" ]]
             then
                 echo "Converting $FILE to WEBP"
                 cwebp -quiet -q 85 "$FILE" -o "${FILE}.webp"
