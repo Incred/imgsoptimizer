@@ -1,7 +1,9 @@
 #!/bin/bash
 
 SEARCHDIR="$1"
-OPTIMIZER_SCRIPT="/home/incred/dev/jpgpngoptimizer"
+
+OPTIMIZER_SCRIPT="/home/incred/work/imgsoptimizer/imgsoptimizer/jpgpngoptimizer"
+CONV2WEBP_SCRIPT="/home/incred/work/imgsoptimizer/imgsoptimizer/conv2webp"
 
 if [ $# -eq 0 ]
     then
@@ -17,6 +19,10 @@ find $SEARCHDIR -type f -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" | wh
                 $OPTIMIZER_SCRIPT "$FILE" && \
                     echo "Seting attribute to: $FILE" && \
                     attr -s optimized -V yes "$FILE"
+        fi
+        if [[ ! -e "${FILE}.webp" ]]
+            then
+                nice -n 19 ionice -c 3 $CONV2WEBP_SCRIPT "$FILE"
         fi
     done
 

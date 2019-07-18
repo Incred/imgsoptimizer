@@ -1,0 +1,19 @@
+#!/bin/bash
+
+FILE="$1"
+TMPDIR="/tmp"
+
+if [[ -e "$FILE"  && ${FILE: -4} != ".tmp" ]]
+    then
+        TYPE=$(file -b --mime-type "$FILE")
+        if [[ $TYPE != "image/webp" && $TYPE != "inode/x-empty" ]]
+            then
+                echo "Converting $FILE to WEBP"
+                cwebp -quiet -q 85 "$FILE" -o "${FILE}.webp"
+        fi
+    else
+        echo "Skip this file: $FILE"
+        exit 1
+fi
+
+exit 0
