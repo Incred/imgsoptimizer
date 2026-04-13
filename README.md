@@ -78,28 +78,24 @@ cd imgsoptimizer
 chmod +x imgsoptimizer jpgpngoptimizer findimgswithoutattr
 ```
 
-**2. Set the script paths** in `imgsoptimizer` and `findimgswithoutattr`:
+The scripts automatically detect their own location, so they will find each other
+regardless of where you place them — no manual path editing required.
+
+**2. (Optional) Install as a system service:**
+
+Open `imgsoptimizer-init` and edit the three variables at the top of the file:
 
 ```bash
-# In imgsoptimizer:
-OPTIMIZER_SCRIPT="/path/to/jpgpngoptimizer"
-FINDNOPTIMIZE_SCRIPT="/path/to/findimgswithoutattr"
-
-# In findimgswithoutattr:
-OPTIMIZER_SCRIPT="/path/to/jpgpngoptimizer"
+DAEMON=/usr/local/bin/imgsoptimizer   # Full path to the imgsoptimizer script
+USER="www-data"                        # User to run the daemon as
+WATCHING_DIR="/var/www/media/"         # Directory to watch for new images
 ```
 
-**3. (Optional) Install as a system service:**
+Then install and start the service:
 
 ```bash
 sudo cp imgsoptimizer-init /etc/init.d/imgsoptimizer
 sudo chmod +x /etc/init.d/imgsoptimizer
-
-# Edit the variables at the top of imgsoptimizer-init:
-# DAEMON=       — full path to the imgsoptimizer script
-# USER=         — user to run the daemon as
-# WATCHING_DIR= — directory to watch
-
 sudo update-rc.d imgsoptimizer defaults
 sudo service imgsoptimizer start
 ```
