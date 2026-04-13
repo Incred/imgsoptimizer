@@ -1,7 +1,11 @@
 #!/bin/bash
 
 SEARCHDIR="$1"
-OPTIMIZER_SCRIPT="/home/incred/dev/jpgpngoptimizer"
+
+# Resolve the directory where this script lives,
+# so companion scripts are found regardless of install location.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+OPTIMIZER_SCRIPT="$SCRIPT_DIR/jpgpngoptimizer"
 
 if [ $# -eq 0 ]
     then

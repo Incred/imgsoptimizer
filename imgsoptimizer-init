@@ -1,19 +1,14 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          skeleton
+# Provides:          imgsoptimizer
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Example initscript
-# Description:       This file should be used to construct scripts to be
-#                    placed in /etc/init.d.
+# Short-Description: Image optimization daemon
+# Description:       Watches a directory and automatically optimizes
+#                    JPEG and PNG images as they appear.
 ### END INIT INFO
-
-# Author: Foo Bar <foobar@baz.org>
-#
-# Please remove the "Author" lines above and replace them
-# with your own name if you copy and modify this script.
 
 # Do NOT "set -e"
 
@@ -21,9 +16,12 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Optimize new images"
 NAME=imgsoptimizer
-DAEMON=/home/incred/dev/imgsoptimizer
-USER="incred"
-WATCHING_DIR="/tmp/media/"
+
+# --- Edit these values before starting the service ---
+DAEMON=/usr/local/bin/imgsoptimizer   # Full path to the imgsoptimizer script
+USER="www-data"                        # User to run the daemon as
+WATCHING_DIR="/var/www/media/"         # Directory to watch for new images
+# -----------------------------------------------------
 DAEMON_ARGS="$WATCHING_DIR"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
